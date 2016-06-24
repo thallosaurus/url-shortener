@@ -36,15 +36,45 @@ app.post('/create', initConnection, function (req, res) {
   //res.send(res.user);
   var collection = req.db.collection('usercollection');
   
-  var getRandomNumber = function () {
+  /* var getRandomNumber = function () {
     var nmbr = (Math.random() * 100000).toString();
     var final = nmbr.split(".");
     return final[0].toString();
+  }; */
+  function getRandomNumber()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+  
+  /* var validate = function (url) {
+    if (url.substr(0, 7) == "http://") {
+      return  url.substring(7, url.length);
+    } else if (url.substring(0, 8) == "https://") {
+      return url.substring(8, url.length);
+    } else {
+      return url;
+    }
+  } */
+  var validate = function (url) {
+    if (url.substr(0, 7) == "http://" || url.substring(0, 8) == "https://") {
+      return url;
+    } else {
+      return "https://" + url;
+    }
   };
+  
+  var url = validate(req.body.url);
+  console.log(url);
   
   var element = {
     urlId : getRandomNumber(),
-    origin : 'http://' + req.body.url
+    origin : url
   };
       
   collection.insert(element, function (err, result) {
@@ -68,11 +98,18 @@ app.get('/:id', initConnection, function (req, res) {
   
   collection.find(options).toArray(function(err, result) {
     if(!err) {
-      //if nothing is found
-      res.send(result[0].origin);
+      if (!result.length < 1) {
+        
+        res.redirect(result[0].origin);
+      } else {
+        console.log("No URL found");
+        res.send("No URL found");
+      }
+      
       req.db.close(function () {
         console.log("Disconnected from server (query)");
       });
+      
     } else {
       console.log(err);
     }

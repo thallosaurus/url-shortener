@@ -4,7 +4,8 @@
         <title>Create URL</title>
     </head>
     <body>
-      <form action="/create" method="post">
+      <form name="main" action="/create" method="post" onaction="validateForm()">
+          <label for="url">URL:</label>
           <input name="url"></input>
           <button type="submit" name="action">Senden</button>
       </form>
