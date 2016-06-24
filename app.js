@@ -36,31 +36,17 @@ app.post('/create', initConnection, function (req, res) {
   //res.send(res.user);
   var collection = req.db.collection('usercollection');
   
-  /* var getRandomNumber = function () {
-    var nmbr = (Math.random() * 100000).toString();
-    var final = nmbr.split(".");
-    return final[0].toString();
-  }; */
   function getRandomNumber()
 {
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < 5; i++ )
+    for( var i=0; i < 10; i++ )
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
 }
-  
-  /* var validate = function (url) {
-    if (url.substr(0, 7) == "http://") {
-      return  url.substring(7, url.length);
-    } else if (url.substring(0, 8) == "https://") {
-      return url.substring(8, url.length);
-    } else {
-      return url;
-    }
-  } */
+
   var validate = function (url) {
     if (url.substr(0, 7) == "http://" || url.substring(0, 8) == "https://") {
       return url;
@@ -103,7 +89,7 @@ app.get('/:id', initConnection, function (req, res) {
         res.redirect(result[0].origin);
       } else {
         console.log("No URL found");
-        res.send("No URL found");
+        res.send("Error: No URL found. Please check, if you have the right URL");
       }
       
       req.db.close(function () {
