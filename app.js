@@ -3,6 +3,10 @@ var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
+app.get('/favicon.ico', function (req, res) {
+  res.sendFile(__dirname + "/favicon.ico");
+});
+
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 app.get('/', function (req, res) {
@@ -45,10 +49,9 @@ app.post('/create', initConnection, function (req, res) {
       
   collection.insert(element, function (err, result) {
     if (!err) {
-      console.log("Results", result);
       res.send(result);
       req.db.close(function() {
-        console.log("Disconnected from Server");
+        console.log("Disconnected from Server (insert)");
       });
     } else {
       console.log(err);
@@ -60,16 +63,15 @@ app.get('/:id', initConnection, function (req, res) {
   var collection = req.db.collection('usercollection');
   
   var options = {
-    "userId":req.params.id
+    "urlId":req.params.id
   };
   
   collection.find(options).toArray(function(err, result) {
     if(!err) {
-      console.log(options);
-      console.log("Found:", result);
-      res.send(result);
+      //if nothing is found
+      res.send(result[0].origin);
       req.db.close(function () {
-        console.log("Disconnected from server");
+        console.log("Disconnected from server (query)");
       });
     } else {
       console.log(err);
