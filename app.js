@@ -56,7 +56,6 @@ app.post('/create', initConnection, function (req, res) {
   };
   
   var url = validate(req.body.url);
-  console.log(url);
   
   var element = {
     urlId : getRandomNumber(),
@@ -89,7 +88,7 @@ app.get('/:id', initConnection, function (req, res) {
         res.redirect(result[0].origin);
       } else {
         console.log("No URL found");
-        res.send("Error: No URL found. Please check, if you have the right URL");
+        res.send("Error: No URL found. Please check, if you have the right URL.");
       }
       
       req.db.close(function () {
@@ -101,6 +100,7 @@ app.get('/:id', initConnection, function (req, res) {
     }
   });
 });
+
 app.listen(process.env.PORT, function () {
   console.log("Running on", process.env.PORT);
 });
