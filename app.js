@@ -3,6 +3,8 @@ var bodyParser = require('body-parser');
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
+app.set('view engine', 'pug');
+
 app.get('/favicon.ico', function (req, res) {
   res.sendFile(__dirname + "/favicon.ico");
 });
@@ -64,7 +66,9 @@ app.post('/create', initConnection, function (req, res) {
       
   collection.insert(element, function (err, result) {
     if (!err) {
-      res.send(result);
+      //res.send(result);
+      res.render('result', { url : 'https://url-shortener-thallosaurus.c9users.io/' + result.ops[0].urlId, title : "Your URL"});
+      console.log(result.ops[0].urlId);
       req.db.close(function() {
         console.log("Disconnected from Server (insert)");
       });
